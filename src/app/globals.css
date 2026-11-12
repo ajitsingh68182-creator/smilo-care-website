@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-royal: #1749b8;
+  --color-navy: #102d65;
+  --color-sky: #20a9e8;
+  --color-surface-soft: #f5f8ff;
+  --color-gold: #d6b879;
+  --color-border-light: #e7ecf5;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-padding-top: 5.5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: #ffffff;
+    color: #1e293b;
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    text-align: start;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    color: #102d65;
+    letter-spacing: -0.02em;
+  }
+
+  h1,
+  h2 {
+    text-wrap: balance;
+  }
+
+  p,
+  blockquote {
+    text-wrap: pretty;
+  }
+
+  :where(a:any-link, button, summary, input, select, textarea, [tabindex="0"]):focus-visible {
+    outline: 3px solid #1749b8;
+    outline-offset: 2px;
+  }
+
+  input,
+  select,
+  textarea {
+    font: inherit;
+    font-size: max(1rem, 1em);
+  }
+}
+
+/* Native Modal Dialog Scroll Containment & Backdrop */
+dialog:modal {
+  overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+  overflow: hidden;
+  overscroll-behavior: contain;
+  background-color: rgba(16, 45, 101, 0.58);
+  backdrop-filter: blur(4px);
+}
+
+/* Native Dialog Entrance Transition */
+@media (prefers-reduced-motion: no-preference) {
+  dialog.smilo-dialog {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+    transition:
+      opacity 0.24s ease-out,
+      transform 0.24s ease-out,
+      display 0.24s ease-out,
+      overlay 0.24s ease-out;
+    transition-behavior: allow-discrete;
+  }
+
+  dialog.smilo-dialog[open] {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    @starting-style {
+      opacity: 0;
+      transform: translateY(12px) scale(0.985);
+    }
+  }
+
+  dialog.smilo-drawer {
+    opacity: 0;
+    transform: translateX(100%);
+    transition:
+      opacity 0.26s ease-out,
+      transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+      display 0.26s ease-out,
+      overlay 0.26s ease-out;
+    transition-behavior: allow-discrete;
+  }
+
+  dialog.smilo-drawer[open] {
+    opacity: 1;
+    transform: translateX(0);
+    @starting-style {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+  }
+}
+
+/* Native <details> FAQ Accordion Animation */
+.faq-accordion details summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq-accordion details summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-accordion details .faq-chevron {
+  transition: transform 0.24s ease;
+}
+
+.faq-accordion details[open] .faq-chevron {
+  transform: rotate(180deg);
+}
+
+.faq-accordion details::details-content {
+  interpolate-size: allow-keywords;
+  overflow: clip;
+  contain: layout;
+}
+
+.faq-accordion details:not([open])::details-content {
+  block-size: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .faq-accordion details::details-content {
+    transition: block-size, content-visibility, display;
+    transition-duration: 0.28s;
+    transition-timing-function: ease-in-out;
+    transition-behavior: allow-discrete;
+  }
+}
+
+/* Post-Interaction Form Validation */
+.smilo-input {
+  min-height: 48px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.smilo-input:focus {
+  border-color: #1749b8;
+  box-shadow: 0 0 0 3px rgba(23, 73, 184, 0.14);
+}
+
+.smilo-input:is(:user-invalid, .user-invalid-fallback) {
+  border-color: #c62828;
+  background-color: #fff5f5;
+}
+
+.smilo-input:is(:user-invalid, .user-invalid-fallback) + .smilo-error-msg {
+  display: flex;
+}
+
+.smilo-input:is(:user-valid, .user-valid-fallback) {
+  border-color: #15803d;
+}
+
+@media (pointer: coarse) {
+  .smilo-input {
+    min-height: 52px;
+  }
+}
+
+/* Scroll-Snap Carousel */
+.carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  touch-action: pan-y manipulation;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .carousel-track {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Accessible Visually Hidden Utility */
+.visually-hidden:where(:not(:focus-within, :active)) {
+  position: absolute !important;
+  clip-path: inset(50%) !important;
+  overflow: hidden !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  white-space: nowrap !important;
+}
+
+/* Forced Colors Mode Fallback */
+@media (forced-colors: active) {
+  .smilo-card-border {
+    border: 1px solid CanvasText;
+  }
+  [aria-current="page"] {
+    outline: 2px solid Highlight;
+  }
+}
